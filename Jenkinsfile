@@ -12,6 +12,13 @@ pipeline {
                 sh 'docker build -t myapp .'
             }
         }
+        stage('Trivy Scan') {
+            steps {
+            sh '''
+            trivy image --exit-code 1 --severity HIGH,CRITICAL myapp || true
+            '''
+        }
+    }
         stage('build container') {
             steps {
                 sh 'docker rm -f myappcontainer || true'
